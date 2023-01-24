@@ -68,7 +68,7 @@ function SaveQuestion() {
                             },
                         ]}
                     >
-                        <TextArea rows={4} placeholder="Введите ответ" maxLength={5000} />
+                        <TextArea rows={4} placeholder="Введите ответ" />
                     </Form.Item>
 
                     <Form.Item

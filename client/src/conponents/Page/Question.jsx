@@ -87,7 +87,6 @@ function Question() {
                 setEditQuestionInTextarea(arrQuestion[i].answer)
                 break
             }
-
         }
         setIsEditOpen(true);
     };
@@ -107,9 +106,17 @@ function Question() {
         const resultEdit = await reqEditAnwser.json()
         console.log(resultEdit)
         if (resultEdit.response.length === 0) {
+            // window.location.reload();
+            let newQuestions = [...arrQuestion]
+            for (let i = 0; i < newQuestions.length; i++) {
+                if (newQuestions[i].id === editId) {
+                    newQuestions[i].answer = saveEditQuestion
+                    setArr(newQuestions)
+                    break
+                }
 
+            }
         }
-
         setIsEditOpen(false);
     };
 
@@ -177,7 +184,7 @@ function Question() {
                 {showAnswer}
             </Modal>
             <Modal title="Basic Modal" open={isEditOpen} onCancel={editCancel2} onOk={editOk2}>
-                <TextArea rows={4} defaultValue={editQuestionInTextarea} maxLength={5000} onChange={(e) => {
+                <TextArea rows={4} defaultValue={editQuestionInTextarea} onChange={(e) => {
                     setSaveEditQuestion(e.target.value);
 
                 }} />

@@ -37,7 +37,7 @@ app.get('/getquestion', function (req, res) {
         if (err) {
             console.log("Can not connect to the DB" + err);
         }
-        client.query('SELECT * FROM questions WHERE id = id', function (err, result) {
+        client.query('SELECT * FROM questions order by id', function (err, result) {
             done();
             if (err) {
                 console.log(err);
@@ -98,7 +98,7 @@ app.post('/savequestion', function (req, res) {
 app.post('/saveeditquestion', function (req, res) {
     console.log(req.body)
 
-    const { id, answer } = req.body;
+    const { answer, id } = req.body;
 
     console.log(id, answer)
     pool.connect(function (err, client, done) {
@@ -108,7 +108,7 @@ app.post('/saveeditquestion', function (req, res) {
         }
 
 
-        client.query(`UPDATE questions SET answer=${answer} WHERE id=${id};
+        client.query(`UPDATE questions SET answers='${answer}' WHERE id=${id};
          `, function (err, result) {
             done();
             if (err) {
@@ -119,8 +119,6 @@ app.post('/saveeditquestion', function (req, res) {
             res.status(200).json({ response: result.rows });
         })
     })
-
-
 })
 
 app.listen(5000, console.log('Server Work'))
