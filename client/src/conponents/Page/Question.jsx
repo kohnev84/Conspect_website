@@ -37,7 +37,7 @@ function Question() {
 
     const deleteQuestion = async (id) => {
         const reqComparison = await fetch(
-            'http://localhost:5000/deletequestion',
+            '/deletequestion',
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ function Question() {
     }
 
     useEffect(() => {
-        fetch('http://localhost:5000/getquestion')
+        fetch('/getquestion')
             .then(res => res.json())
             .then(res => {
                 let newArr = [];
@@ -95,7 +95,7 @@ function Question() {
     };
     const editOk2 = async () => {
         const reqEditAnwser = await fetch(
-            'http://localhost:5000/saveeditquestion',
+            '/saveeditquestion',
             {
                 headers: {
                     'Content-Type': 'application/json',

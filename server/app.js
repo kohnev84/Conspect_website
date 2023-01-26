@@ -8,7 +8,7 @@ const app = express()
 app.use(express.static(path.join('../client', 'build')));
 
 app.use(cors({
-    origin: 'http://localhost:3000'
+    origin: '*'
 }))
 
 const config = {
