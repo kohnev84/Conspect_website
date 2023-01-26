@@ -1,9 +1,11 @@
 const cors = require('cors');
+const path = require('path');
 const pg = require('pg')
 const express = require('express')
 var bodyParser = require('body-parser')
 const app = express()
 
+app.use(express.static(path.join('../client', 'build')));
 
 app.use(cors({
     origin: 'http://localhost:3000'
