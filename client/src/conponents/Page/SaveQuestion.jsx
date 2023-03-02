@@ -8,7 +8,7 @@ function SaveQuestion() {
     const onFinish = async (values) => {
         console.log('Success:', values);
 
-        const createQuestionRequest = await fetch('/savequestion',
+        const createQuestionRequest = await fetch('http://localhost:5000/savequestion',
             {
                 headers: {
                     'Content-Type': 'application/json',

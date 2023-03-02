@@ -35,7 +35,7 @@ app.get('/getquestion', function (req, res) {
     console.log('Запрос получен');
 
     pool.connect(function (err, client, done) {
-
+        console.log('Проверка бэка номер 1')
         if (err) {
             console.log("Can not connect to the DB" + err);
         }
@@ -45,7 +45,8 @@ app.get('/getquestion', function (req, res) {
                 console.log(err);
                 return res.status(400).send(err);
             }
-            console.log(result.rows)
+            // console.log(result.rows)
+            console.log('Проверка бэка номер 2')
             return res.status(200).json({ response: result.rows });
         })
     })
@@ -58,7 +59,7 @@ app.delete('/deletequestion', function (req, res) {
         if (err) {
             console.log("Can not connect to the DB" + err);
         }
-        client.query(`DELETE FROM questions WHERE id = ${req.body.idDeleteQuestion}`, function (err, result) {
+        client.query(`DELETE FROM questions WHERE id='${req.body.idDeleteQuestion}';`, function (err, result) {
             done();
             if (err) {
                 console.log(err);

@@ -15,29 +15,6 @@ function Question() {
     const [editId, setEditId] = useState(1);
     const [showIdAnswer, setShowIdAnswer] = useState("");
     const [showAnswer, setShowAnswer] = useState("");
-    const [editRaw, setEditRaw] = useState(null);
-
-    useEffect(() => {
-        console.log('Проверка номер 1')
-        fetch('http://localhost:5000/getquestion')
-            .then(res => res.json())
-            .then(res => {
-                let newArr = [];
-                console.log({ res })
-                let result = res.response
-                for (let i = 0; i < result.length; i++) {
-                    let obj = {}
-                    obj.numberList = i + 1;
-                    obj.id = result[i].id
-                    obj.question = result[i].questions
-                    obj.answer = result[i].answers
-                    newArr.push(obj)
-                };
-                setArr(newArr)
-                console.log('Проверка номер 2')
-            })
-    }, [])
-
     const showModal = (e) => {
         console.log(e)
         for (let i = 0; i < arrQuestion.length; i++) {
@@ -60,7 +37,7 @@ function Question() {
 
     const deleteQuestion = async (id) => {
         const reqComparison = await fetch(
-            'http://localhost:5000/deletequestion',
+            '/deletequestion',
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -81,7 +58,24 @@ function Question() {
         }
     }
 
-
+    useEffect(() => {
+        fetch('/getquestion')
+            .then(res => res.json())
+            .then(res => {
+                let newArr = [];
+                console.log({ res })
+                let result = res.response
+                for (let i = 0; i < result.length; i++) {
+                    let obj = {}
+                    obj.numberList = i + 1;
+                    obj.id = result[i].id
+                    obj.question = result[i].questions
+                    obj.answer = result[i].answers
+                    newArr.push(obj)
+                };
+                setArr(newArr)
+            })
+    }, [])
 
 
     const editQuestion = (e) => {
@@ -91,7 +85,6 @@ function Question() {
                 console.log(arrQuestion[i])
                 setEditId(e);
                 setEditQuestionInTextarea(arrQuestion[i].answer)
-                console.log(arrQuestion[i].answer)
                 break
             }
         }
@@ -99,17 +92,16 @@ function Question() {
     };
     const editCancel2 = () => {
         setIsEditOpen(false);
-        setEditQuestionInTextarea('')
     };
     const editOk2 = async () => {
         const reqEditAnwser = await fetch(
-            'http://localhost:5000/saveeditquestion',
+            '/saveeditquestion',
             {
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 method: 'POST',
-                body: JSON.stringify({ answer: editRaw.answer, id: editRaw.id })
+                body: JSON.stringify({ answer: saveEditQuestion, id: editId })
             })
         const resultEdit = await reqEditAnwser.json()
         console.log(resultEdit)
@@ -117,8 +109,8 @@ function Question() {
             // window.location.reload();
             let newQuestions = [...arrQuestion]
             for (let i = 0; i < newQuestions.length; i++) {
-                if (newQuestions[i].id === editRaw.id) {
-                    newQuestions[i].answer = editRaw.answer
+                if (newQuestions[i].id === editId) {
+                    newQuestions[i].answer = saveEditQuestion
                     setArr(newQuestions)
                     break
                 }
@@ -126,7 +118,6 @@ function Question() {
             }
         }
         setIsEditOpen(false);
-        setEditQuestionInTextarea('')
     };
 
 
@@ -153,9 +144,10 @@ function Question() {
         },
         {
             title: 'Редактировать',
+            dataIndex: 'id',
             key: 'id',
-            render: (record) => (
-                <Button onClick={() => { setEditRaw(record); setIsEditOpen(true) }}>
+            render: (id) => (
+                <Button onClick={() => { editQuestion(id) }}>
                     Редактировать
                 </Button>
             )
@@ -188,24 +180,15 @@ function Question() {
     return (
         <div>
             <Table columns={columns} dataSource={arrQuestion} />
-            <Modal title="Basic Modal" width={"80%"} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
+            <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
                 {showAnswer}
             </Modal>
-            <Modal title="Редактирование" open={isEditOpen} onCancel={editCancel2} onOk={editOk2}>
-                {editRaw?.answer}
-                {/* <TextArea rows={4} onChange={(e) => {
+            <Modal title="Basic Modal" open={isEditOpen} onCancel={editCancel2} onOk={editOk2}>
+                <TextArea rows={4} defaultValue={editQuestionInTextarea} onChange={(e) => {
                     setSaveEditQuestion(e.target.value);
 
-                }} /> */}
-                <TextArea rows={4} value={editRaw?.answer}
-                    onChange={(e) => {
+                }} />
 
-                        let arr = { ...editRaw }
-                        arr.answer = e.target.value
-
-                        setEditRaw(arr)
-                    }}
-                />
             </Modal>
         </div>
     );
