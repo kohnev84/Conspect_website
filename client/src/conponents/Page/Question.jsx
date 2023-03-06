@@ -16,6 +16,8 @@ function Question() {
     const [showIdAnswer, setShowIdAnswer] = useState("");
     const [showAnswer, setShowAnswer] = useState("");
     const [editRaw, setEditRaw] = useState(null);
+    const [addDocument, setAddDocument] = useState([])
+
 
     useEffect(() => {
         console.log('Проверка номер 1')
@@ -37,6 +39,11 @@ function Question() {
                 console.log('Проверка номер 2')
             })
     }, [])
+
+    const addFlie = (e) => {
+        console.log(e)
+
+    }
 
     const showModal = (e) => {
         console.log(e)

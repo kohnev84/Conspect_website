@@ -3,6 +3,9 @@ const path = require('path');
 const pg = require('pg')
 const express = require('express')
 var bodyParser = require('body-parser')
+const fs = require('fs');
+var http = require('http');
+const multer = require('multer')
 const app = express()
 
 app.use(express.static(path.join('../client', 'build')));
@@ -26,6 +29,36 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+const storage = multer.diskStorage({
+    destination: "./uploads/",
+    filename: function (req, file, cb) {
+        console.log(req.body)
+        cb(null, req.body.some + "_" + Date.now() + '_' + Buffer.from(file.originalname, 'latin1').toString('utf8'));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 1000000 },
+}).single("avatar");
+
+app.post("/upload", async (req, res) => {
+    console.log(req.body)
+    console.log(req.file)
+    upload(req, res, (err) => {
+        console.log("Request ---", req.body.some);
+        console.log("Request --- some", req.some);
+
+        console.log("Request file ---", req.file);
+        if (!err)
+            return res.status(200).json({ response: 21 });
+    });
+})
+
+app.get('/download', function (req, res) {
+    const file = `${__dirname}/uploads/9908e81ade0aa99e29c35eacd0de5254.txt`;
+    res.download(file);
+});
 
 app.get('/', function (req, res) {
     res.send('Hello world')
@@ -123,5 +156,7 @@ app.post('/saveeditquestion', function (req, res) {
         })
     })
 })
+
+
 
 app.listen(5000, console.log('Server Work'))
