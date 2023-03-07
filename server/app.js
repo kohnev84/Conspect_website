@@ -42,18 +42,18 @@ const upload = multer({
     limits: { fileSize: 1000000 },
 }).single("avatar");
 
-app.post("/upload", async (req, res) => {
-    console.log(req.body)
-    console.log(req.file)
-    upload(req, res, (err) => {
-        console.log("Request ---", req.body.some);
-        console.log("Request --- some", req.some);
+// app.post("/upload", async (req, res) => {
+//     console.log(req.body)
+//     console.log(req.file)
+//     upload(req, res, (err) => {
+//         console.log("Request ---", req.body.some);
+//         console.log("Request --- some", req.some);
 
-        console.log("Request file ---", req.file);
-        if (!err)
-            return res.status(200).json({ response: 21 });
-    });
-})
+//         console.log("Request file ---", req.file);
+//         if (!err)
+//             return res.status(200).json({ response: 21 });
+//     });
+// })
 
 app.get('/download', function (req, res) {
     const file = `${__dirname}/uploads/9908e81ade0aa99e29c35eacd0de5254.txt`;
@@ -106,6 +106,14 @@ app.delete('/deletequestion', function (req, res) {
 
 app.post('/savequestion', function (req, res) {
     console.log(req.body)
+    console.log(req.file)
+
+    upload(req, res, (err) => {
+        console.log("Request --- some", req.some);
+
+        console.log("Request file ---", req.file);//Here you get file.
+        /*Now do where ever you want to do*/
+    });
 
     const { question, answer } = req.body;
 
