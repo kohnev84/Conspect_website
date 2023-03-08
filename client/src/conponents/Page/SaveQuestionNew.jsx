@@ -33,7 +33,7 @@ function SaveQuestion() {
         // file.name = 'filedata'
         console.log(addDocument);
         formData.append('avatar', addDocument)
-        formData.append('body', values)
+        formData.append('some', values)
         const config = {
             headers: {
                 'Content-type': 'multipart/form-data'
@@ -156,10 +156,10 @@ function SaveQuestion() {
                             <p className="ant-upload-drag-icon">
                                 <InboxOutlined />
                             </p>
-                            <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                            <p className="ant-upload-text">Выбирите файл</p>
                             <p className="ant-upload-hint">
-                                Support for a single or bulk upload. Strictly prohibit from uploading company data or other
-                                band files
+                                Поддержка одиночной или массовой загрузки. Строгий запрет на загрузку данных компании или других
+                                файлы группы
                             </p>
                         </Dragger>
                         <Button type="primary" htmlType="submit">

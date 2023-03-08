@@ -32,8 +32,8 @@ app.use(bodyParser.urlencoded({
 const storage = multer.diskStorage({
     destination: "./uploads/",
     filename: function (req, file, cb) {
-        console.log(req.body)
-        cb(null, req.body.some + "_" + Date.now() + '_' + Buffer.from(file.originalname, 'latin1').toString('utf8'));
+        // console.log(req.body)
+        cb(null, Date.now() + '_' + Buffer.from(file.originalname, 'latin1').toString('utf8'));
     }
 });
 
@@ -104,18 +104,18 @@ app.delete('/deletequestion', function (req, res) {
     })
 })
 
-app.post('/savequestion', function (req, res) {
-    console.log(req.body)
+app.post('/savequestion', async function (req, res) {
+    // console.log(req.file.some)
     console.log(req.file)
-
-    upload(req, res, (err) => {
-        console.log("Request --- some", req.some);
-
+    let obj = {}
+    await upload(req, res, (err) => {
+        console.log("Request --- some", req.body.some);
+        obj = req.body.some
         console.log("Request file ---", req.file);//Here you get file.
         /*Now do where ever you want to do*/
     });
 
-    const { question, answer } = req.body;
+    const { question, answer } = obj;
 
     console.log(question, answer)
     pool.connect(function (err, client, done) {
@@ -125,7 +125,7 @@ app.post('/savequestion', function (req, res) {
         }
 
 
-        client.query(`INSERT INTO questions(questions, answers) VALUES('${question}', '${answer}'); `, function (err, result) {
+        client.query(`INSERT INTO questions(questions, answers, file_link) VALUES('${question}', '${answer}', '${req.file.filename}'); `, function (err, result) {
             done();
             if (err) {
                 console.log(err);
