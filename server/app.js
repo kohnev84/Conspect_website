@@ -104,37 +104,39 @@ app.delete('/deletequestion', function (req, res) {
     })
 })
 
-app.post('/savequestion', async function (req, res) {
+app.post('/savequestion', function (req, res) {
     // console.log(req.file.some)
     console.log(req.file)
     let obj = {}
-    await upload(req, res, (err) => {
-        console.log("Request --- some", req.body.some);
-        obj = req.body.some
+    upload(req, res, (err) => {
+        console.log("Request --- some", JSON.parse(req.body.some));
+        obj = JSON.parse(req.body.some)
         console.log("Request file ---", req.file);//Here you get file.
         /*Now do where ever you want to do*/
+
+        const { question, answer } = obj;
+
+        console.log(question, answer)
+        pool.connect(function (err, client, done) {
+
+            if (err) {
+                console.log("Can not connect to the DB" + err);
+            }
+
+
+            client.query(`INSERT INTO questions(questions, answers, file_link) VALUES('${question}', '${answer}', '${req.file.filename}'); `, function (err, result) {
+                done();
+                if (err) {
+                    console.log(err);
+                    res.status(400).send(err);
+                }
+                console.log(result.rows);
+                res.status(200).json({ response: 'success' });
+            })
+        })
+
     });
 
-    const { question, answer } = obj;
-
-    console.log(question, answer)
-    pool.connect(function (err, client, done) {
-
-        if (err) {
-            console.log("Can not connect to the DB" + err);
-        }
-
-
-        client.query(`INSERT INTO questions(questions, answers, file_link) VALUES('${question}', '${answer}', '${req.file.filename}'); `, function (err, result) {
-            done();
-            if (err) {
-                console.log(err);
-                res.status(400).send(err);
-            }
-            console.log(result.rows);
-            res.status(200).json({ response: 'success' });
-        })
-    })
 
 
 })

@@ -33,7 +33,7 @@ function SaveQuestion() {
         // file.name = 'filedata'
         console.log(addDocument);
         formData.append('avatar', addDocument)
-        formData.append('some', values)
+        formData.append('some', JSON.stringify(values))
         const config = {
             headers: {
                 'Content-type': 'multipart/form-data'
