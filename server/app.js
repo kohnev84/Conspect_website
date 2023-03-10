@@ -55,11 +55,6 @@ const upload = multer({
 //     });
 // })
 
-app.get('/download', function (req, res) {
-    const file = `${__dirname}/uploads/9908e81ade0aa99e29c35eacd0de5254.txt`;
-    res.download(file);
-});
-
 app.get('/', function (req, res) {
     res.send('Hello world')
 })
@@ -79,7 +74,7 @@ app.get('/getquestion', function (req, res) {
                 return res.status(400).send(err);
             }
             // console.log(result.rows)
-            console.log('Проверка бэка номер 2')
+            // console.log('Проверка бэка номер 2', result.rows)
             return res.status(200).json({ response: result.rows });
         })
     })
@@ -167,6 +162,11 @@ app.post('/saveeditquestion', function (req, res) {
     })
 })
 
+app.get('/download', function (req, res) {
+    console.log(req.query)
+    const file = `${__dirname}/uploads/${req.query.file_link}`;
+    res.download(file);
+});
 
 
 app.listen(5000, console.log('Server Work'))

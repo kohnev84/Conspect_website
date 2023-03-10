@@ -33,6 +33,7 @@ function Question() {
                     obj.id = result[i].id
                     obj.question = result[i].questions
                     obj.answer = result[i].answers
+                    obj.file_link = result[i].file_link
                     newArr.push(obj)
                 };
                 setArr(newArr)
@@ -51,7 +52,7 @@ function Question() {
             if (arrQuestion[i].id === e) {
                 console.log(arrQuestion[i])
                 setShowIdAnswer(arrQuestion[i].id)
-                setShowAnswer(arrQuestion[i].answer)
+                setShowAnswer({ answer: arrQuestion[i].answer, file_link: arrQuestion[i].file_link })
                 break
             }
 
@@ -196,7 +197,11 @@ function Question() {
         <div>
             <Table columns={columns} dataSource={arrQuestion} />
             <Modal title="Basic Modal" width={"80%"} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
-                {showAnswer}
+                {showAnswer.answer}
+                <br />
+                {showAnswer.file_link &&
+                    <a href={`http://localhost:5000/download?file_link=${showAnswer.file_link}`}>Скачать файл</a>
+                }
             </Modal>
             <Modal title="Редактирование" open={isEditOpen} onCancel={editCancel2} onOk={editOk2}>
                 {editRaw?.answer}
