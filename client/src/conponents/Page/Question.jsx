@@ -16,7 +16,7 @@ function Question() {
     const [showIdAnswer, setShowIdAnswer] = useState("");
     const [showAnswer, setShowAnswer] = useState("");
     const [editRaw, setEditRaw] = useState(null);
-
+    const [isDeleteFile, setIsDeleteFile] = useState(false);
 
 
     useEffect(() => {
@@ -117,7 +117,7 @@ function Question() {
                     'Content-Type': 'application/json',
                 },
                 method: 'POST',
-                body: JSON.stringify({ answer: editRaw.answer, id: editRaw.id })
+                body: JSON.stringify({ answer: editRaw.answer, id: editRaw.id, isDeleteFile: isDeleteFile })
             })
         const resultEdit = await reqEditAnwser.json()
         console.log(resultEdit)
@@ -193,6 +193,7 @@ function Question() {
         onChange: onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+    console.log(isDeleteFile);
     return (
         <div>
             <Table columns={columns} dataSource={arrQuestion} />
@@ -218,6 +219,16 @@ function Question() {
                         setEditRaw(arr)
                     }}
                 />
+                {editRaw?.file_link &&
+                    <>
+                        <input type="checkbox" name="" id="idDeleteFile"
+                            onChange={() => isDeleteFile ? setIsDeleteFile(false) : setIsDeleteFile(true)}
+                        />
+                        <label htmlFor="idDeleteFile">Удалить прикрепленный файл</label>
+                    </>
+
+                }
+
             </Modal>
         </div>
     );

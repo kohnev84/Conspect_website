@@ -139,7 +139,15 @@ app.post('/savequestion', function (req, res) {
 app.post('/saveeditquestion', function (req, res) {
     console.log(req.body)
 
-    const { answer, id } = req.body;
+    const { answer, id, isDeleteFile } = req.body;
+
+    let strToPSQL = ""
+
+    if (isDeleteFile === true) {
+        strToPSQL = `UPDATE questions SET answers='${answer}'  file_link=' ' WHERE id=${id};`
+    } else {
+        strToPSQL = `UPDATE questions SET answers='${answer}' WHERE id=${id};`
+    }
 
     console.log(id, answer)
     pool.connect(function (err, client, done) {
@@ -149,8 +157,7 @@ app.post('/saveeditquestion', function (req, res) {
         }
 
 
-        client.query(`UPDATE questions SET answers='${answer}' WHERE id=${id};
-         `, function (err, result) {
+        client.query(strToPSQL, function (err, result) {
             done();
             if (err) {
                 console.log(err);
