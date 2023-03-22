@@ -144,7 +144,7 @@ app.post('/saveeditquestion', function (req, res) {
     let strToPSQL = ""
 
     if (isDeleteFile === true) {
-        strToPSQL = `UPDATE questions SET answers='${answer}'  file_link=' ' WHERE id=${id};`
+        strToPSQL = `UPDATE questions SET answers='${answer}' ,  file_link=null WHERE id=${id};`
     } else {
         strToPSQL = `UPDATE questions SET answers='${answer}' WHERE id=${id};`
     }
@@ -164,7 +164,7 @@ app.post('/saveeditquestion', function (req, res) {
                 res.status(400).send(err);
             }
             console.log(result.rows);
-            res.status(200).json({ response: result.rows });
+            res.status(200).json({ response: 'success update' });
         })
     })
 })

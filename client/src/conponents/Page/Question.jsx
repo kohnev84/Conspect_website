@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Modal, message, Input } from 'antd';
+import { Button, Table, Modal, message, Input, } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 const { TextArea } = Input;
+const { Search } = Input;
 
 
 function Question() {
@@ -17,7 +19,7 @@ function Question() {
     const [showAnswer, setShowAnswer] = useState("");
     const [editRaw, setEditRaw] = useState(null);
     const [isDeleteFile, setIsDeleteFile] = useState(false);
-
+    const [arrQuestionStatic, setQuestionStatic] = useState([]);
 
     useEffect(() => {
         console.log('Проверка номер 1')
@@ -37,9 +39,21 @@ function Question() {
                     newArr.push(obj)
                 };
                 setArr(newArr)
+                setQuestionStatic(newArr)
                 console.log('Проверка номер 2')
             })
     }, [])
+
+    const onSearch = (e) => {
+        console.log(e)
+
+        let strSearch = e
+
+        let arrQuestionEdit = [...arrQuestionStatic];
+        let result = arrQuestionEdit.filter(e => e.question.toLowerCase().match(strSearch.toLowerCase()) !== null)
+        setArr(result)
+    }
+
 
     const addFlie = (e) => {
         console.log(e)
@@ -85,6 +99,7 @@ function Question() {
                 e.numberList = index + 1;
             })
             setArr(filterArrQuestion)
+            setQuestionStatic(filterArrQuestion)
             message.success('Удалено успешно')
         }
     }
@@ -121,13 +136,16 @@ function Question() {
             })
         const resultEdit = await reqEditAnwser.json()
         console.log(resultEdit)
-        if (resultEdit.response.length === 0) {
+        if (resultEdit.response === 'success update') {
             // window.location.reload();
             let newQuestions = [...arrQuestion]
             for (let i = 0; i < newQuestions.length; i++) {
                 if (newQuestions[i].id === editRaw.id) {
                     newQuestions[i].answer = editRaw.answer
+                    newQuestions[i].file_link = null
                     setArr(newQuestions)
+                    setQuestionStatic(newQuestions)
+                    message.success('Успешно отредактированно')
                     break
                 }
 
@@ -164,7 +182,7 @@ function Question() {
             key: 'id',
             render: (record) => (
                 <Button onClick={() => { setEditRaw(record); setIsEditOpen(true) }}>
-                    Редактировать
+                    <EditOutlined />
                 </Button>
             )
         },
@@ -174,7 +192,7 @@ function Question() {
             key: 'id',
             render: (id) => (
                 <Button onClick={() => { console.log(id); deleteQuestion(id); }}>
-                    Удалить
+                    <DeleteOutlined />
                 </Button>
             )
         }
@@ -196,6 +214,13 @@ function Question() {
     console.log(isDeleteFile);
     return (
         <div>
+            <Search
+                placeholder="Введите название вопроса"
+                allowClear
+                enterButton="Поиск"
+                size="large"
+                onChange={(e) => { onSearch(e.target.value) }}
+            />
             <Table columns={columns} dataSource={arrQuestion} />
             <Modal title="Basic Modal" width={"80%"} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
                 {showAnswer.answer}
